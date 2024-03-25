@@ -1,0 +1,102 @@
+<!-- netify.ejs -->
+<html>
+<head>
+  <title>Netify Data</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <style>
+    /* Adjust margin to accommodate the sidebar */
+    .content {
+      margin-left: 160px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <%- include('../public/sidebar.html') %>
+    </div>
+    <div class="content">
+      <div class="dropdowns">
+        <form action="/netify" method="get">
+          
+          <label for="fqdn">Search FQDN:</label>
+          <input type="text" id="fqdn" name="fqdn" value="<%= selectedFqdn %>" placeholder="Enter FQDN">
+          
+          <label for="timeframe">Timeframe:</label>
+          <select id="timeframe" name="timeframe">
+            <% timeframeOptions.forEach(option => { %>
+              <option value="<%= option.value %>"<%= selectedTimeframe === option.value ? ' selected' : '' %>><%= option.label %></option>
+            <% }); %>
+          </select>
+
+          <label for="hostname">Hostname:</label>
+          <select id="hostname" name="hostname">
+            <option value="">All Hostnames</option>
+            <% uniqueHostnames.forEach(hostname => { %>
+              <option value="<%= hostname %>"<%= selectedHostname === hostname ? ' selected' : '' %>><%= hostname %></option>
+            <% }); %>
+          </select>
+
+          <label for="protocol">Detected Protocol:</label>
+          <select id="protocol" name="protocol">
+            <option value="">All Protocols</option>
+            <% availableProtocols.forEach(protocol => { %>
+              <option value="<%= protocol %>"<%= selectedProtocol === protocol ? ' selected' : '' %>><%= protocol %></option>
+            <% }); %>
+          </select>
+
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+
+      <table>
+        <tr>
+          <th>Time Insert (DESC)</th>
+          <th>Hostname</th>
+          <th>Local IP</th>
+          <th>Local Port</th>
+          <th>FQDN</th>
+          <th>Dest IP</th>
+          <th>Dest Port</th>
+          <th>Dest Type</th>
+          <th>Detected Protocol</th>
+          <th>Interface</th>
+          <th>Dest Country</th>
+          <th>Dest State</th>
+          <th>Dest City</th>
+        </tr>
+        <% filteredResults.forEach(row => { %>
+          <% if (!row.local_ip.includes(':') && (selectedProtocol === '' || row.detected_protocol_name === selectedProtocol)) { %>
+            <tr>
+              <td class="timeinsert"><%= row.timeinsert %></td>
+              <td><%= row.hostname %></td>
+              <td><%= row.local_ip %></td>
+              <td><%= row.local_port %></td>
+              <td><%= row.fqdn %></td>
+              <td><%= row.dest_ip %></td>
+              <td><%= row.dest_port %></td>
+              <td><%= row.dest_type %></td>
+              <td><%= row.detected_protocol_name %></td>
+              <td><%= row.interface %></td>
+              <td><%= row.dest_country %></td>
+              <td><%= row.dest_state %></td>
+              <td><%= row.dest_city %></td>
+            </tr>
+          <% } %>
+        <% }); %>
+      </table>
+    </div>
+  </div>
+  <script>
+    // JavaScript code to handle the protocol dropdown selection
+    var protocolDropdown = document.getElementById("protocol");
+    protocolDropdown.addEventListener("change", function() {
+      if (protocolDropdown.value === "") {
+        protocolDropdown.classList.remove("selected");
+      } else {
+        protocolDropdown.classList.add("selected");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+body {
+  background-color: #333333;
+  color: #dfdfdf;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+th {
+  background-color: #222222;
+  color: #dfdfdf;
+  padding: 10px;
+  border: 1px solid #707070;
+}
+
+td {
+  padding: 5px;
+  border: 1px solid #777777;
+  color: #dfdfdf;
+}
+
+tr:nth-child(even) {
+  background-color: #1e2226;
+}
+
+tr:nth-child(odd) {
+  background-color: #2a2f34;
+}
+
+td.timeinsert {
+  white-space: nowrap;
+}
+
+.dropdowns {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.dropdowns label {
+  margin-right: 5px;
+  color: #dfdfdf;
+}
+
+.dropdowns select {
+  margin-right: 10px;
+}
+
+.sidebar {
+  width: 150px;
+  height: 100%;
+  background-color: #222222;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin-bottom: 10px;
+}
+
+.sidebar a {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #dfdfdf;
+}
+
+.sidebar a:hover {
+  background-color: #444444;
+}
+
+/* New styles for the dashboard */
+.cards {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+}
+
+.card {
+  background-color: #222222;
+  color: #dfdfdf;
+  padding: 20px;
+  border-radius: 5px;
+  width: calc(25% - 20px);
+  box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.card p {
+  margin-bottom: 0;
+}

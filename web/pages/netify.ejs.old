@@ -1,0 +1,110 @@
+<html>
+<head>
+  <title>Netify Data</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <style>
+    .content {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <form id="filter-form" onsubmit="applyFQDNFilter(); return false;">
+        <label for="hostname-filter">Hostname:</label>
+        <select id="hostname-filter" onchange="applyFilters()">
+          <option value="">All Hostnames</option>
+          <% hostnames.forEach(hostname => { %>
+            <option value="<%= hostname.hostname %>" <%= selectedHostname === hostname.hostname ? 'selected' : '' %>><%= hostname.hostname %></option>
+          <% }); %>
+        </select>
+
+        <label for="protocol-filter">Detected Protocol:</label>
+        <select id="protocol-filter" onchange="applyFilters()">
+          <option value="">All Protocols</option>
+          <% protocols.forEach(protocol => { %>
+            <option value="<%= protocol %>" <%= selectedProtocol === protocol ? 'selected' : '' %>><%= protocol %></option>
+          <% }); %>
+        </select>
+
+        <label for="interval-filter">Time Interval:</label>
+        <select id="interval-filter" onchange="applyFilters()">
+          <option value="">All Intervals</option>
+          <option value="1">1 Minute</option>
+          <option value="5">5 Minutes</option>
+          <option value="15">15 Minutes</option>
+          <option value="30">30 Minutes</option>
+          <option value="60">1 Hour</option>
+        </select>
+
+        <label for="fqdn-filter">FQDN:</label>
+        <input type="text" id="fqdn-filter">
+
+        <button type="submit">Search FQDN</button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Time Insert (DESC)</th>
+            <th>Hostname</th>
+            <th>Local IP</th>
+            <th>Local Port</th>
+            <th>FQDN</th>
+            <th>Dest IP</th>
+            <th>Dest Port</th>
+            <th>Dest Type</th>
+            <th>Detected Protocol</th>
+            <th>Interface</th>
+            <th>Dest Country</th>
+            <th>Dest State</th>
+            <th>Dest City</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% filteredResults.forEach(row => { %>
+            <tr>
+              <td class="timeinsert"><%= row.timeinsert %></td>
+              <td><%= row.hostname %></td>
+              <td><%= row.local_ip %></td>
+              <td><%= row.local_port %></td>
+              <td><%= row.fqdn %></td>
+              <td><%= row.dest_ip %></td>
+              <td><%= row.dest_port %></td>
+              <td><%= row.dest_type %></td>
+              <td><%= row.detected_protocol_name %></td>
+              <td><%= row.interface %></td>
+              <td><%= row.dest_country %></td>
+              <td><%= row.dest_state %></td>
+              <td><%= row.dest_city %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function applyFilters() {
+      const selectedHostname = document.getElementById('hostname-filter').value;
+      const selectedProtocol = document.getElementById('protocol-filter').value;
+      const selectedInterval = document.getElementById('interval-filter').value;
+
+      const queryString = `?hostname=${selectedHostname}&protocol=${selectedProtocol}&interval=${selectedInterval}`;
+      window.location.href = '/netify' + queryString;
+    }
+
+    function applyFQDNFilter() {
+      const fqdnFilter = document.getElementById('fqdn-filter').value;
+
+      const selectedHostname = document.getElementById('hostname-filter').value;
+      const selectedProtocol = document.getElementById('protocol-filter').value;
+      const selectedInterval = document.getElementById('interval-filter').value;
+
+      const queryString = `?hostname=${selectedHostname}&protocol=${selectedProtocol}&interval=${selectedInterval}&fqdn=${fqdnFilter}`;
+      window.location.href = '/netify' + queryString;
+    }
+  </script>
+</body>
+</html>
