@@ -3,10 +3,7 @@ from datetime import datetime
 import requests
 from CONFIG import * # This will import shared variables from the CONFIG.py file.
 
-
-
-
-# Decision to generate MAC host mapping from prometheus_url
+# Decision to generate MAC host mapping from url
 generate_mac_mapping = "yes"  # Change to "no" if you want to skip the mapping generation
 
 # Function to fetch DHCP lease data from the custom page

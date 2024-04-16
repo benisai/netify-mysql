@@ -2,12 +2,15 @@
 
 const mysql = require('mysql2');
 
-// Configure MySQL connection
+ROUTER_IP: process.env.ROUTER_IP || '10.0.3.1'
+
+// MySQL config via envVars or static if envvars not found. 
 const connectionConfig = {
-  host: '10.0.5.213',
-  user: 'netify',
-  password: 'netify',
-  database: 'netifyDB'
+  host: process.env.MYSQL_HOST || '10.0.5.5',
+  port: process.env.MYSQL_PORT || '3306', // Parse port as integer
+  user: process.env.MYSQL_USER || 'netify',
+  password: process.env.MYSQL_PASSWORD || 'netify',
+  database: process.env.MYSQL_DB || 'netifyDB',
 };
 
 let connection;
@@ -18,17 +21,17 @@ function connectToMySQL() {
 
   connection.connect((err) => {
     if (err) {
-      console.error('Error connecting to MySQL:', err);
+      console.error(`Error connecting to MySQL server at ${connectionConfig.host}:${connectionConfig.port}:`, err);
       setTimeout(connectToMySQL, 1000); // Retry connection every 1 second
       return;
     }
-    console.log('Connected to MySQL server');
+    console.log(`Connected to MySQL server at ${connectionConfig.host}:${connectionConfig.port}`);
   });
 
   // Handle connection errors
   connection.on('error', (err) => {
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-      console.error('MySQL connection lost. Reconnecting...');
+      console.error('MySQL connection lost to ${connectionConfig.host}:${connectionConfig.port}. Reconnecting...');
       connectToMySQL();
     }
   });
@@ -49,13 +52,13 @@ function handleNetifyRequest(req, res) {
 
   const queryProtocols = `
     SELECT DISTINCT detected_protocol_name
-    FROM netify
+    FROM netify_flow
     WHERE timeinsert >= NOW() - INTERVAL ? MINUTE
     ORDER BY detected_protocol_name;`;
 
   const queryResults = `
     SELECT timeinsert, hostname, local_ip, local_port, fqdn, dest_ip, dest_port, dest_type, detected_protocol_name, interface, dest_country, dest_state, dest_city
-    FROM netify
+    FROM netify_flow
     WHERE detected_protocol_name like ? AND timeinsert >= NOW() - INTERVAL ? MINUTE
     ORDER BY timeinsert DESC;`;
 
